@@ -62,7 +62,7 @@ from typing import List
 # FAULT : A major fault has occured, cannot be recovered from automatically. \n// TODO review this
 
 
-class GrowthModule (PyTango.LatestDeviceImpl):
+class GrowthModule (PyTango.Device_4Impl):
     """The Growth Module is responsible for growing the vegetables.
     
     This device class runs on the Top-Level Controller and communicates
@@ -84,7 +84,7 @@ class GrowthModule (PyTango.LatestDeviceImpl):
     # ----- PROTECTED REGION END -----#	//	GrowthModule.global_variables
 
     def __init__(self, cl, name):
-        PyTango.LatestDeviceImpl.__init__(self,cl,name)
+        PyTango.Device_4Impl.__init__(self,cl,name)
         self.debug_stream("In __init__()")
         GrowthModule.init_device(self)
         # ----- PROTECTED REGION ID(GrowthModule.__init__) ENABLED START -----#
@@ -108,8 +108,6 @@ class GrowthModule (PyTango.LatestDeviceImpl):
         self.attr_LEDStates_read = [False]
         self.attr_plantStates_read = [0]
         self.attr_plantTypes_read = [0]
-        self.attr_GMBelowPlantStates_read = [0]
-        self.attr_GMBelowPlantTypes_read = [0]
         # ----- PROTECTED REGION ID(GrowthModule.init_device) ENABLED START -----#
         self.controller_socket: socket.socket = self.try_connecting_to_controller()
         # ----- PROTECTED REGION END -----#	//	GrowthModule.init_device
@@ -231,41 +229,6 @@ class GrowthModule (PyTango.LatestDeviceImpl):
         self.send_atr_write('plantTypes', list(map(str, data)))
         # ----- PROTECTED REGION END -----#	//	GrowthModule.plantTypes_write
         
-    def read_GMBelowPlantStates(self, attr):
-        self.debug_stream("In read_GMBelowPlantStates()")
-        # ----- PROTECTED REGION ID(GrowthModule.GMBelowPlantStates_read) ENABLED START -----#
-        values = self.send_atr_read('GMBelowPlantStates')
-        if len(values) == 5:
-            self.attr_GMBelowPlantStates_read = list(map(int, values))
-
-        attr.set_value(self.attr_GMBelowPlantStates_read)
-
-        # ----- PROTECTED REGION END -----#	//	GrowthModule.GMBelowPlantStates_read
-        
-    def write_GMBelowPlantStates(self, attr):
-        self.debug_stream("In write_GMBelowPlantStates()")
-        data = attr.get_write_value()
-        # ----- PROTECTED REGION ID(GrowthModule.GMBelowPlantStates_write) ENABLED START -----#
-        self.send_atr_write('GMBelowPlantStates', list(map(str, data)))
-        # ----- PROTECTED REGION END -----#	//	GrowthModule.GMBelowPlantStates_write
-        
-    def read_GMBelowPlantTypes(self, attr):
-        self.debug_stream("In read_GMBelowPlantTypes()")
-        # ----- PROTECTED REGION ID(GrowthModule.GMBelowPlantTypes_read) ENABLED START -----#
-        values = self.send_atr_read('GMBelowPlantTypes')
-        if len(values) == 5:
-            self.attr_GMBelowPlantTypes_read = list(map(int, values))
-        attr.set_value(self.attr_GMBelowPlantTypes_read)
-
-        # ----- PROTECTED REGION END -----#	//	GrowthModule.GMBelowPlantTypes_read
-        
-    def write_GMBelowPlantTypes(self, attr):
-        self.debug_stream("In write_GMBelowPlantTypes()")
-        data = attr.get_write_value()
-        # ----- PROTECTED REGION ID(GrowthModule.GMBelowPlantTypes_write) ENABLED START -----#
-        self.send_atr_write('GMBelowPlantTypes', list(map(str, data)))
-        # ----- PROTECTED REGION END -----#	//	GrowthModule.GMBelowPlantTypes_write
-        
     
     
             
@@ -280,6 +243,34 @@ class GrowthModule (PyTango.LatestDeviceImpl):
     #    GrowthModule command methods
     # -------------------------------------------------------------------------
     
+    def SwitchLightOn(self, argin):
+        """ Turns a given light on
+        :param argin: 
+        :type argin: PyTango.DevShort
+        """
+        self.debug_stream("In SwitchLightOn()")
+        #----- PROTECTED REGION ID(GrowthModule.SwitchLightOn) ENABLED START -----#
+        
+        #----- PROTECTED REGION END -----#	//	GrowthModule.SwitchLightOn
+        
+    def WaterPlants(self, argin):
+        """ Turns on the pump for a given amount of time
+        :param argin: 
+        :type argin: PyTango.DevShort
+        """
+        self.debug_stream("In WaterPlants()")
+        #----- PROTECTED REGION ID(GrowthModule.WaterPlants) ENABLED START -----#
+        
+        #----- PROTECTED REGION END -----#	//	GrowthModule.WaterPlants
+        
+    def RetrieveOverallState(self):
+        """ Sends back all metrics
+        """
+        self.debug_stream("In RetrieveOverallState()")
+        #----- PROTECTED REGION ID(GrowthModule.RetrieveOverallState) ENABLED START -----#
+        
+        #----- PROTECTED REGION END -----#	//	GrowthModule.RetrieveOverallState
+        
 
     # ----- PROTECTED REGION ID(GrowthModule.programmer_methods) ENABLED START -----#
     def try_connecting_to_controller(self) -> socket.socket:
@@ -410,6 +401,15 @@ class GrowthModuleClass(PyTango.DeviceClass):
 
     #    Command definitions
     cmd_list = {
+        'SwitchLightOn':
+            [[PyTango.DevShort, "none"],
+            [PyTango.DevVoid, "none"]],
+        'WaterPlants':
+            [[PyTango.DevShort, "none"],
+            [PyTango.DevVoid, "none"]],
+        'RetrieveOverallState':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
         }
 
 
@@ -473,20 +473,6 @@ class GrowthModuleClass(PyTango.DeviceClass):
             PyTango.READ_WRITE, 5],
             {
                 'description': "// TODO encoding",
-            } ],
-        'GMBelowPlantStates':
-            [[PyTango.DevUShort,
-            PyTango.SPECTRUM,
-            PyTango.READ_WRITE, 5],
-            {
-                'description': "// TODO Encoding",
-            } ],
-        'GMBelowPlantTypes':
-            [[PyTango.DevUShort,
-            PyTango.SPECTRUM,
-            PyTango.READ_WRITE, 5],
-            {
-                'description': "// TODO Encoding",
             } ],
         }
 

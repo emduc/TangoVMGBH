@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
-  <classes name="GrowthModule" pogoRevision="9.7">
-    <description description="The Growth Module is responsible for growing the vegetables.&#xA;&#xA;This device class runs on the Top-Level Controller and communicates&#xA;with each Growth Module via a custom protocol. This is required&#xA;because a tango device server requires an operating system to run&#xA;and the Growth Modules use microcontrollers." title="GrowBotHub" sourcePath="/home/niels/Documents/NON_SWITCHDRIVE_EPFL/BA6/ProjetBA/tango-device-classes/GrowthModule" language="Python" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
+  <classes name="GrowthModule" pogoRevision="9.6">
+    <description description="The Growth Module is responsible for growing the vegetables.&#xA;&#xA;This device class runs on the Top-Level Controller and communicates&#xA;with each Growth Module via a custom protocol. This is required&#xA;because a tango device server requires an operating system to run&#xA;and the Growth Modules use microcontrollers." title="GrowBotHub" sourcePath="/home/tango-cs/Desktop/GrowthModule/TangoVMGBH/GrowthModule" language="Python" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" copyright="" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at epfl.ch - niels.lachat" author="niels.lachat" emailDomain="epfl.ch" classFamily="Acquisition" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="03_Aeroponics" reference=""/>
     </description>
@@ -10,23 +10,50 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <DefaultPropValue>172.30.1.21</DefaultPropValue>
     </deviceProperties>
-    <commands name="State" description="This command gets the device state (stored in its device_state data member) and returns it to the caller." execMethod="dev_state" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="State" description="This command gets the device state (stored in its device_state data member) and returns it to the caller." execMethod="dev_state" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="none">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
       <argout description="Device state">
         <type xsi:type="pogoDsl:StateType"/>
       </argout>
-      <status abstract="true" inherited="true" concrete="true"/>
+      <status abstract="true" inherited="true" concrete="true" concreteHere="false"/>
     </commands>
-    <commands name="Status" description="This command gets the device status (stored in its device_status data member) and returns it to the caller." execMethod="dev_status" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="Status" description="This command gets the device status (stored in its device_status data member) and returns it to the caller." execMethod="dev_status" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="none">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
       <argout description="Device status">
         <type xsi:type="pogoDsl:ConstStringType"/>
       </argout>
-      <status abstract="true" inherited="true" concrete="true"/>
+      <status abstract="true" inherited="true" concrete="true" concreteHere="false"/>
+    </commands>
+    <commands name="SwitchLightOn" description="Turns a given light on" execMethod="switch_light_on" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+      <argin description="">
+        <type xsi:type="pogoDsl:ShortType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </commands>
+    <commands name="WaterPlants" description="Turns on the pump for a given amount of time" execMethod="water_plants" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+      <argin description="">
+        <type xsi:type="pogoDsl:ShortType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </commands>
+    <commands name="RetrieveOverallState" description="Sends back all metrics" execMethod="retrieve_overall_state" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
     <attributes name="temperature" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:FloatType"/>
@@ -92,22 +119,6 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="// TODO encoding" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
-    <attributes name="GMBelowPlantStates" attType="Spectrum" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="5" maxY="" allocReadMember="true" isDynamic="false">
-      <dataType xsi:type="pogoDsl:UShortType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
-      <archiveEvent fire="false" libCheckCriteria="false"/>
-      <dataReadyEvent fire="false" libCheckCriteria="true"/>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="// TODO Encoding" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
-    </attributes>
-    <attributes name="GMBelowPlantTypes" attType="Spectrum" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="5" maxY="" allocReadMember="true" isDynamic="false">
-      <dataType xsi:type="pogoDsl:UShortType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
-      <archiveEvent fire="false" libCheckCriteria="false"/>
-      <dataReadyEvent fire="false" libCheckCriteria="true"/>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="// TODO Encoding" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
-    </attributes>
     <states name="STANDBY" description="The Growth Module is Idle and ready to take measurements.">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
@@ -126,6 +137,6 @@
     <states name="FAULT" description="A major fault has occured, cannot be recovered from automatically. &#xA;// TODO review this">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
-    <preferences docHome="./doc_html" makefileHome="$(TANGO_HOME)"/>
+    <preferences docHome="./doc_html" makefileHome="/usr/local/share/pogo/preferences"/>
   </classes>
 </pogoDsl:PogoSystem>
